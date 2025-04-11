@@ -1,0 +1,5 @@
+
+body { font-family: sans-serif; background: #fffaf5; color: #333; padding: 20px; }
+header { background: #fddde6; padding: 20px; text-align: center; }
+.hero { background: #fff0f5; padding: 40px; text-align: center; }
+.product img { max-width: 100%; border-radius: 10px; }
