@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Sweet Dreams 💤</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Sweet Dreams 🛏️</h1>
+        <button id="catalogBtn" class="oval-button">Каталог 📦</button>
+    </header>
+
+    <main id="catalog" class="hidden">
+        <!-- Товары появятся здесь -->
+    </main>
+
+    <div id="cartIcon">
+        🛒
+    </div>
+
+    <div id="productDetails" class="modal hidden">
+        <div class="modal-content">
+            <img src="images/mockup_1.png" alt="Фото товара">
+            <div class="scrollable-description">
+                <p>Описание (не краткое)</p>
+            </div>
+            <div class="modal-buttons">
+                <button class="oval-button" onclick="closeModal()">Закрыть</button>
+                <button class="oval-button">В корзину 🛒</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
