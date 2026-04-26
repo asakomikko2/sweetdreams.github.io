@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sweet Pillow Dreams — комфорт для вашего сна</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-light: #14b8a6;
+            --accent: #f59e0b;
+            --bg: #f4efe7;
+            --surface: rgba(255, 251, 245, 0.9);
+            --surface-strong: #fffaf4;
+            --text: #1f2937;
+            --muted: #5f6c7b;
+            --border: rgba(31, 41, 55, 0.08);
+            --shadow: 0 24px 60px rgba(31, 41, 55, 0.1);
+        }
+
+        body.dark {
+            --primary: #2dd4bf;
+            --primary-dark: #0f766e;
+            --primary-light: #5eead4;
+            --accent: #fbbf24;
+            --bg: #0b1720;
+            --surface: rgba(13, 30, 39, 0.88);
+            --surface-strong: #10212a;
+            --text: #ecfdfb;
+            --muted: #b6d0cc;
+            --border: rgba(148, 163, 184, 0.12);
+            --shadow: 0 24px 60px rgba(2, 6, 23, 0.36);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(245, 158, 11, 0.15), transparent 28%),
+                radial-gradient(circle at top right, rgba(20, 184, 166, 0.12), transparent 26%),
+                linear-gradient(180deg, #fff9f1 0%, var(--bg) 56%, #ebe2d6 100%);
+            min-height: 100vh;
+            transition: background 0.25s ease, color 0.25s ease;
+        }
+
+        body.dark {
+            background:
+                radial-gradient(circle at top left, rgba(245, 158, 11, 0.14), transparent 24%),
+                radial-gradient(circle at top right, rgba(45, 212, 191, 0.12), transparent 24%),
+                linear-gradient(180deg, #06121a 0%, #0b1720 58%, #102531 100%);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), transparent 86%);
+            z-index: -1;
+        }
+
+        .container {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(16px);
+            background: rgba(255, 250, 243, 0.76);
+            border-bottom: 1px solid var(--border);
+        }
+
+        body.dark .header {
+            background: rgba(10, 22, 29, 0.78);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 16px 0;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .logo i {
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            color: var(--accent);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(20, 184, 166, 0.14));
+        }
+
+        .logo span:first-child {
+            background: linear-gradient(135deg, var(--primary-dark), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .theme-toggle,
+        .ghost-link,
+        .primary-link {
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .ghost-link,
+        .primary-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 20px;
+            font-weight: 700;
+        }
+
+        .ghost-link {
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .primary-link {
+            color: white;
+            border-color: transparent;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            box-shadow: 0 16px 28px rgba(20, 184, 166, 0.24);
+        }
+
+        .theme-toggle:hover,
+        .ghost-link:hover,
+        .primary-link:hover {
+            transform: translateY(-2px);
+        }
+
+        main {
+            padding: 28px 0 56px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+            gap: 28px;
+            align-items: stretch;
+        }
+
+        .hero-copy,
+        .hero-panel,
+        .section-card,
+        .feature-card,
+        .restoration,
+        .footer {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .hero-copy {
+            position: relative;
+            overflow: hidden;
+            padding: 42px;
+            border-radius: 34px;
+        }
+
+        .hero-copy::after {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            right: -40px;
+            bottom: -120px;
+            border-radius: 50%;
+            background: rgba(20, 184, 166, 0.12);
+            filter: blur(10px);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            margin-bottom: 18px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .eyebrow i {
+            color: var(--accent);
+        }
+
+        h1 {
+            max-width: 620px;
+            margin-bottom: 18px;
+            font-size: clamp(2.5rem, 5vw, 4.8rem);
+            line-height: 0.98;
+            letter-spacing: -0.06em;
+        }
+
+        .hero-copy p {
+            max-width: 620px;
+            font-size: 1.05rem;
+            color: var(--muted);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .hero-meta {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 28px;
+        }
+
+        .hero-stat {
+            padding: 16px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.66);
+        }
+
+        body.dark .hero-stat,
+        body.dark .eyebrow {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .hero-stat strong {
+            display: block;
+            font-size: 1.55rem;
+            letter-spacing: -0.04em;
+        }
+
+        .hero-stat span {
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .hero-panel {
+            padding: 24px;
+            border-radius: 34px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .panel-illustration {
+            position: relative;
+            min-height: 170px;
+            overflow: hidden;
+            border-radius: 28px;
+            background:
+                radial-gradient(circle at 24% 28%, rgba(255, 179, 71, 0.2), transparent 22%),
+                radial-gradient(circle at 78% 32%, rgba(20, 184, 166, 0.16), transparent 24%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.48));
+            border: 1px solid rgba(31, 41, 55, 0.06);
+        }
+
+        .sleep-orbit {
+            position: absolute;
+            inset: 0;
+        }
+
+        .sleep-orbit::before,
+        .sleep-orbit::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .sleep-orbit::before {
+            top: 28px;
+            right: 38px;
+            width: 78px;
+            height: 78px;
+            background: linear-gradient(135deg, #ffe0a8, #ffc868);
+            box-shadow: 0 12px 28px rgba(245, 158, 11, 0.24);
+        }
+
+        .sleep-orbit::after {
+            top: 34px;
+            right: 26px;
+            width: 62px;
+            height: 62px;
+            background: rgba(255, 255, 255, 0.82);
+        }
+
+        .sleep-line {
+            position: absolute;
+            left: 30px;
+            right: 36px;
+            height: 2px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(20, 184, 166, 0.18), rgba(20, 184, 166, 0.05));
+        }
+
+        .sleep-line.one { top: 62px; }
+        .sleep-line.two { top: 90px; right: 68px; }
+        .sleep-line.three { top: 118px; right: 102px; }
+
+        .sleep-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(20, 184, 166, 0.7);
+            animation: drift 4s ease-in-out infinite;
+        }
+
+        .sleep-dot.one { left: 42px; top: 40px; animation-delay: 0s; }
+        .sleep-dot.two { left: 118px; top: 122px; width: 7px; height: 7px; animation-delay: 0.9s; }
+        .sleep-dot.three { left: 186px; top: 64px; width: 8px; height: 8px; animation-delay: 1.6s; }
+
+        .panel-card {
+            padding: 20px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.48));
+            border: 1px solid rgba(31, 41, 55, 0.06);
+        }
+
+        body.dark .panel-card {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        body.dark .panel-illustration {
+            background:
+                radial-gradient(circle at 24% 28%, rgba(255, 200, 104, 0.16), transparent 20%),
+                radial-gradient(circle at 78% 32%, rgba(45, 212, 191, 0.12), transparent 22%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+        }
+
+        .panel-card h3 {
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .panel-card p {
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .section-card {
+            padding: 30px;
+            border-radius: 30px;
+        }
+
+        .section-card h2 {
+            margin-bottom: 10px;
+            font-size: 1.9rem;
+            letter-spacing: -0.04em;
+        }
+
+        .section-card p {
+            color: var(--muted);
+            max-width: 760px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            padding: 24px;
+            border-radius: 28px;
+        }
+
+        .feature-card i {
+            width: 52px;
+            height: 52px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            border-radius: 18px;
+            color: white;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.08rem;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .restoration {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: center;
+            padding: 28px 30px;
+            margin-top: 22px;
+            border-radius: 30px;
+        }
+
+        .restoration p {
+            color: var(--muted);
+            margin-top: 8px;
+            max-width: 700px;
+        }
+
+        .footer {
+            margin-top: 28px;
+            padding: 28px;
+            border-radius: 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .footer h4,
+        .footer-logo {
+            margin-bottom: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .footer p,
+        .footer a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: rgba(20, 184, 166, 0.1);
+        }
+
+        .footer-bottom {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.86rem;
+            text-align: center;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translateY(0); opacity: 0.45; }
+            50% { transform: translateY(-8px); opacity: 1; }
+        }
+
+        @media (max-width: 980px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .features,
+            .footer-content,
+            .hero-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .restoration {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .hero-copy,
+            .hero-panel,
+            .section-card,
+            .feature-card,
+            .restoration,
+            .footer {
+                padding: 22px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+        }
+
+        .language-toggle {
+            width: 52px;
+            height: 44px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: var(--card);
+            color: var(--text);
+            font-weight: 900;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a class="logo" href="/">
+                    <i class="fas fa-moon"></i>
+                    <span>Sweet</span><span>Pillow</span><span>Dreams</span>
+                </a>
+                <div class="header-actions">
+                    <a href="/catalog" class="ghost-link">Каталог</a>
+                    <button class="theme-toggle" id="themeToggle" title="Переключить тему">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero">
+                <div class="hero-copy">
+                    <div class="eyebrow"><i class="fas fa-feather-alt"></i> Оффлайн-магазин, онлайн-заказы и собственная мастерская</div>
+                    <h1>Комфортный сон начинается с вещи, которую приятно выбрать.</h1>
+                    <p>Sweet Pillow Dreams с 2008 года помогает подобрать подушки, наволочки и защитные чехлы без лишней суеты. Мы бережно относимся и к новым изделиям, и к любимым подушкам, которым нужна реставрация.</p>
+                    <p style="margin-top:14px;color:var(--muted);max-width:640px;">Если вы только присматриваетесь, начните с простого: вашей привычной позы сна, любимой высоты подушки и ощущения по мягкости. Дальше уже проще подобрать размер, наполнитель и подходящий формат.</p>
+                    <div class="hero-actions">
+                        <a href="/catalog" class="primary-link">Перейти к товарам</a>
+                        <a href="https://t.me/pillows_uz" target="_blank" class="ghost-link">Написать в Telegram</a>
+                    </div>
+                    <div class="hero-meta">
+                        <div class="hero-stat">
+                            <strong>с 2008</strong>
+                            <span>работаем в Ташкенте и онлайн</span>
+                        </div>
+                        <div class="hero-stat">
+                            <strong>2 формата</strong>
+                            <span>готовые товары и восстановление подушек</span>
+                        </div>
+                        <div class="hero-stat">
+                            <strong>1 место</strong>
+                            <span>где можно и подобрать, и обновить любимую подушку</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-panel">
+                    <div class="panel-illustration" aria-hidden="true">
+                        <div class="sleep-orbit"></div>
+                        <div class="sleep-line one"></div>
+                        <div class="sleep-line two"></div>
+                        <div class="sleep-line three"></div>
+                        <div class="sleep-dot one"></div>
+                        <div class="sleep-dot two"></div>
+                        <div class="sleep-dot three"></div>
+                    </div>
+                    <div class="panel-card">
+                        <h3>Подушки и текстиль</h3>
+                        <p>Классические модели, детские и U-образные подушки для беременных, наперники, наволочки, простыни и влагозащитные чехлы.</p>
+                    </div>
+                    <div class="panel-card">
+                        <h3>Материалы без лишнего шума</h3>
+                        <p>Хлопковые ткани, пухо-перьевые наполнители и холлофайбер. Помогаем выбрать по мягкости, высоте и привычкам сна.</p>
+                    </div>
+                    <div class="panel-card">
+                        <h3>Реставрация с заботой</h3>
+                        <p>Обеззараживание, вакуумная чистка и замена наперника, чтобы подушка снова ощущалась свежей и удобной.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-grid">
+                <div class="section-card">
+                    <h2>Что у нас особенно хорошо получается</h2>
+                    <p>Мы не перегружаем выбор. Вместо этого помогаем найти подходящий формат сна, подбираем размер и наполнитель, а если подушка уже любима, возвращаем ей объём и аккуратный внешний вид.</p>
+                    <div class="features">
+                        <div class="feature-card">
+                            <i class="fas fa-cubes"></i>
+                            <h3>Наполнители и ткани</h3>
+                            <p>Натуральная х/б ткань, пух-перо и холлофайбер. Материалы подбираются под ежедневный комфорт и понятный уход.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-layer-group"></i>
+                            <h3>Большой ассортимент</h3>
+                            <p>Есть решения для взрослых, детей, беременных, диванов и запасных комплектов текстиля, чтобы всё было в одном месте.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-hand-sparkles"></i>
+                            <h3>Реставрация подушек</h3>
+                            <p>Если наполнитель слёжился, а чехол устал, мы можем освежить подушку и продлить ей жизнь без покупки новой.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2>О магазине</h2>
+                    <p>Sweet Pillow Dreams — это оффлайн-магазин, онлайн-витрина и мастерская по реставрации подушек. Мы работаем с 2008 года и помогаем людям находить комфортный сон: от классических и ортопедических моделей до наволочек, простыней на резинке и защитных чехлов.</p>
+                </div>
+
+                <div class="restoration">
+                    <div>
+                        <h2>Реставрация подушек</h2>
+                        <p>Если подушка потеряла объём, стала тяжёлой или просто требует обновления, мы проведём чистку, обеззараживание и замену наперника. Это удобный способ вернуть ей свежесть и мягкость.</p>
+                    </div>
+                    <a href="https://t.me/pillows_uz" target="_blank" class="primary-link">Восстановить подушку</a>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <div class="footer-content">
+                    <div>
+                        <div class="footer-logo"><i class="fas fa-moon"></i> Sweet Pillow Dreams</div>
+                        <p>Комфорт для вашего сна с 2008 года.</p>
+                    </div>
+                    <div>
+                        <h4>Контакты</h4>
+                        <p><i class="fab fa-telegram"></i> @pillows_uz</p>
+                        <p><i class="fab fa-instagram"></i> sweetpillowdreams_uz</p>
+                        <p><i class="fas fa-map-marker-alt"></i> г. Ташкент, Яшнобадский р-н, ул. Авиасозлар-1, дом 19</p>
+                    </div>
+                    <div>
+                        <h4>Мы в соцсетях</h4>
+                        <div class="social-links">
+                            <a href="https://t.me/pillows_uz" target="_blank"><i class="fab fa-telegram"></i></a>
+                            <a href="https://www.instagram.com/sweetpillowdreams_uz" target="_blank"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>Режим работы</h4>
+                        <p>ПН-СБ: 10:00-16:00</p>
+                        <p>ВС: выходной</p>
+                    </div>
+                </div>
+                <div class="footer-bottom">© 2008-2026 Sweet Pillow Dreams — Все права защищены</div>
+            </footer>
+        </div>
+    </main>
+
+    <script src="/catalog/i18n.js"></script>
+    <script>
+        const THEME_STORAGE_KEY = 'spd-theme';
+        const themeToggle = document.getElementById('themeToggle');
+        const icon = themeToggle.querySelector('i');
+
+        function applyTheme(mode) {
+            if (mode === 'dark') {
+                document.body.classList.add('dark');
+                icon.className = 'fas fa-sun';
+            } else {
+                document.body.classList.remove('dark');
+                icon.className = 'fas fa-moon';
+            }
+            document.documentElement.dataset.theme = mode;
+            localStorage.setItem(THEME_STORAGE_KEY, mode);
+            localStorage.setItem('theme', mode);
+        }
+
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || localStorage.getItem('theme');
+        applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.contains('dark');
+            applyTheme(isDark ? 'light' : 'dark');
+        });
+    </script>
+</body>
+</html>

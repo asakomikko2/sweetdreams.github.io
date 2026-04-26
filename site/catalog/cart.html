@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Корзина — Sweet Pillow Dreams</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/catalog/style.css">
+    <script src="/catalog/i18n.js"></script>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('spd-theme') || localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const mode = savedTheme || (prefersDark ? 'dark' : 'light');
+            document.documentElement.dataset.theme = mode;
+            if (mode === 'dark') document.documentElement.classList.add('preload-dark');
+        })();
+    </script>
+    <style>
+        .cart-page { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .cart-container { background: var(--bg-white); border-radius: 24px; padding: 30px; box-shadow: var(--shadow-md); }
+        .cart-header { display: flex; align-items: center; gap: 16px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .cart-header h1 { font-size: 1.6rem; }
+        .back-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--bg-white); border: 1px solid var(--border); color: var(--primary); cursor: pointer; transition: var(--transition); font-size: 1.2rem; text-decoration: none; }
+        .back-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .cart-item { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+        .cart-item-image { width: 100px; height: 100px; object-fit: contain; border-radius: 12px; background: var(--bg-light); }
+        .cart-item-details { flex: 1; }
+        .cart-item-title { font-weight: 600; font-size: 1rem; margin-bottom: 5px; }
+        .cart-item-size, .cart-item-price { font-size: 0.85rem; color: var(--text-gray); margin-top: 4px; }
+        .cart-item-price span { font-weight: 700; color: var(--primary); }
+        .cart-item-actions { display: flex; align-items: center; gap: 15px; }
+        .quantity-control { display: flex; align-items: center; gap: 10px; }
+        .quantity-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-light); cursor: pointer; font-weight: bold; }
+        .remove-item { background: none; border: none; color: var(--text-gray); cursor: pointer; font-size: 1.1rem; }
+        .remove-item:hover { color: #e74c3c; }
+        .cart-summary { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); text-align: right; }
+        .cart-total { font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; }
+        .checkout-btn { background: var(--primary); color: white; border: none; padding: 12px 32px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: var(--transition); }
+        .checkout-btn:hover { background: var(--primary-dark); }
+        .empty-cart { text-align: center; padding: 60px 20px; color: var(--text-gray); }
+        @media (max-width: 640px) { .cart-item { flex-direction: column; align-items: center; text-align: center; } .cart-item-actions { justify-content: center; } }
+    </style>
+</head>
+<body class="pre-theme">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" id="logo"><i class="fas fa-moon"></i><span>Sweet<span>Pillow</span><span>Dreams</span></span></div>
+                <div class="search-wrapper"><div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Поиск по названию..."><button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button></div><div id="searchDropdown" class="search-dropdown"></div></div>
+                <div class="header-spacer"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="cart-page">
+        <div class="cart-header">
+            <a href="/catalog" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <h1>Корзина</h1>
+        </div>
+        <div class="cart-container" id="cartContainer">
+            <div id="cartItemsList"></div>
+            <div id="cartSummary" class="cart-summary"></div>
+        </div>
+    </div>
+
+    <button id="cartFloatBtn" class="cart-floating"><i class="fas fa-shopping-cart"></i><span id="cartFloatCount" class="cart-floating-count">0</span></button>
+    <button id="assistantFloatBtn" class="assistant-floating"><i class="fas fa-robot"></i></button>
+    <div id="assistantModal" class="assistant-modal">
+        <div class="assistant-header"><span><i class="fas fa-robot"></i> Sweet Pillow AI</span><button id="closeAssistant"><i class="fas fa-times"></i></button></div>
+        <div class="assistant-warning"><i class="fas fa-info-circle"></i> Ответы опираются на данные каталога Sweet Pillow Dreams и могут требовать уточнения.</div>
+        <div class="assistant-messages" id="assistantMessages"><div class="assistant-message bot">Привет! Я AI-консультант Sweet Pillow Dreams. Спрашивайте о подушках, выборе размера, материалах — помогу!</div></div>
+        <div class="assistant-input"><input type="text" id="assistantInput" placeholder="Напишите вопрос..."><button id="assistantSend"><i class="fas fa-paper-plane"></i></button></div>
+    </div>
+
+    <footer class="footer"><div class="container"><div class="footer-content"><div class="footer-col"><div class="footer-logo"><i class="fas fa-moon"></i> Sweet Pillow Dreams</div><p>Комфорт для вашего сна с 2008 года</p></div><div class="footer-col"><h4>Контакты</h4><p><i class="fab fa-telegram"></i> @pillows_uz</p><p><i class="fab fa-instagram"></i> sweetpillowdreams_uz</p><p><i class="fas fa-map-marker-alt"></i> г. Ташкент, Яшнобадский р-н, ул. Авиасозлар-1, дом 19</p></div><div class="footer-col"><h4>Мы в соцсетях</h4><div class="social-links"><a href="https://t.me/pillows_uz" target="_blank"><i class="fab fa-telegram"></i></a><a href="https://www.instagram.com/sweetpillowdreams_uz" target="_blank"><i class="fab fa-instagram"></i></a></div></div><div class="footer-col"><h4>Режим работы</h4><p>ПН-СБ: 10:00–16:00</p><p>ВС: выходной</p></div></div><div class="footer-bottom">© 2008-2026 Sweet Pillow Dreams — Все права защищены</div></div></footer>
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const PLACEHOLDER = '/images/placeholder.png';
+        function cleanProductName(name) { if (!name) return ''; let cleaned = name.replace(/\s*[-–—]\s*комфортный сон/gi, ''); cleaned = cleaned.replace(/\s+1\s*шт\.?/gi, ''); cleaned = cleaned.replace(/,?\s*1\s*шт\.?/gi, ''); cleaned = cleaned.replace(/\s+комфортный сон/gi, ''); return cleaned.trim(); }
+        (function applyStoredTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const mode = localStorage.getItem('spd-theme') || localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+            document.documentElement.dataset.theme = mode;
+            if (mode === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+        })();
+        function declineProduct(name, qty) { if (qty === 1) return name; if (name.endsWith('а')) return name.slice(0, -1) + 'ы'; return name + 'ы'; }
+        function showToast(m){ const t=document.getElementById('toast'); t.textContent=m; t.style.display='block'; setTimeout(()=>t.style.display='none',2000); }
+        function formatPrice(p){ return p?Number(p).toLocaleString()+' сум':'Цена не указана'; }
+        function escapeHtml(t){ if(!t) return ''; return t.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+        function tr(text){ return window.SPD_I18N ? window.SPD_I18N.t(text) : text; }
+        function sendToTelegram(text) { window.open(`https://t.me/pillows_uz?text=${encodeURIComponent(text)}`, '_blank'); }
+        function buyCart(cartItems, total) {
+            let text = `Здравствуйте! Хочу заказать:\n`;
+            cartItems.forEach(item => {
+                const name = cleanProductName(item.name);
+                text += `\n- ${name}`;
+                if(item.size) text += `, ${item.size}`;
+                text += ` — ${item.quantity} шт. (${formatPrice(item.price * item.quantity)})`;
+            });
+            text += `\n\nОбщая сумма: ${formatPrice(total)}`;
+            sendToTelegram(text);
+            showToast('✅ Переход в Telegram для оформления заказа');
+        }
+        function getCart(){ return JSON.parse(localStorage.getItem('cart')||'[]'); }
+        function saveCart(c){ localStorage.setItem('cart',JSON.stringify(c)); renderCart(); updateCartCount(); }
+        function updateCartCount(){ const c=getCart(); const t=c.reduce((s,i)=>s+i.quantity,0); const cnt=document.getElementById('cartFloatCount'); if(cnt)cnt.textContent=t; }
+        function buildProductUrl(product){ const identifier = product?.public_id || product?.sku || product?.slug || ''; return `/catalog/${encodeURIComponent(identifier)}`; }
+        function renderCart(){
+            const cart=getCart(); const container=document.getElementById('cartItemsList'), summaryDiv=document.getElementById('cartSummary');
+            if(cart.length===0){ container.innerHTML=`<div class="empty-cart">🛒 ${tr('Ваша корзина пуста')}</div>`; summaryDiv.innerHTML=''; return; }
+            let total=0,itemsHtml='';
+            cart.forEach(item=>{ const it=(item.price||0)*item.quantity; total+=it;
+                itemsHtml+=`<div class="cart-item" data-sku="${item.sku}"><img class="cart-item-image" src="${item.image || PLACEHOLDER}" onerror="this.src='${PLACEHOLDER}'"><div class="cart-item-details"><div class="cart-item-title">${escapeHtml(cleanProductName(item.name))}</div>${item.size?`<div class="cart-item-size">${tr('Размер')}: ${item.size}</div>`:''}<div class="cart-item-price">${tr('Цена')}: <span>${formatPrice(item.price)}</span></div></div><div class="cart-item-actions"><div class="quantity-control"><button class="quantity-btn" data-sku="${item.sku}" data-delta="-1">-</button><span>${item.quantity}</span><button class="quantity-btn" data-sku="${item.sku}" data-delta="1">+</button></div><button class="remove-item" data-sku="${item.sku}"><i class="fas fa-trash-alt"></i></button></div></div>`;
+            });
+            container.innerHTML=itemsHtml;
+            summaryDiv.innerHTML=`<div class="cart-total">${tr('Итого')}: ${formatPrice(total)}</div><button class="checkout-btn" id="checkoutBtn">${tr('Купить')}</button>`;
+            document.querySelectorAll('.quantity-btn').forEach(btn=>btn.onclick=()=>{ const sku=btn.dataset.sku,delta=parseInt(btn.dataset.delta); let cart=getCart(); const i=cart.find(i=>i.sku===sku); if(i){ i.quantity+=delta; if(i.quantity<=0) cart=cart.filter(i=>i.sku!==sku); saveCart(cart); } });
+            document.querySelectorAll('.remove-item').forEach(btn=>btn.onclick=()=>{ let cart=getCart(); cart=cart.filter(i=>i.sku!==btn.dataset.sku); saveCart(cart); });
+            document.getElementById('checkoutBtn').onclick=()=>{ buyCart(cart, total); };
+        }
+        // Поиск
+        const searchInput = document.getElementById('searchInput'), clearSearch = document.getElementById('clearSearch'), searchDropdown = document.getElementById('searchDropdown');
+        if(searchInput){ searchInput.oninput = () => { const q = searchInput.value.toLowerCase(); clearSearch.classList.toggle('visible', q.length > 0); if(q.length < 2){ searchDropdown.classList.remove('show'); return; } fetch('/api/products').then(r=>r.json()).then(products=>{ const results = products.filter(p => (cleanProductName(p.name)||'').toLowerCase().includes(q)).slice(0,10); searchDropdown.innerHTML = results.map(p => `<div class="search-item" data-sku="${p.sku}"><span>${escapeHtml(cleanProductName(p.name))}</span><span>${formatPrice(p.price)}</span></div>`).join(''); searchDropdown.classList.add('show'); document.querySelectorAll('.search-item').forEach(item => item.onclick = () => { const product = results.find(p => p.sku === item.dataset.sku); window.location.href = buildProductUrl(product || { sku: item.dataset.sku }); searchDropdown.classList.remove('show'); searchInput.value = ''; clearSearch.classList.remove('visible'); }); }); }; clearSearch.onclick = () => { searchInput.value = ''; clearSearch.classList.remove('visible'); searchDropdown.classList.remove('show'); }; document.addEventListener('click', (e) => { if(!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) searchDropdown.classList.remove('show'); }); }
+        document.getElementById('logo').onclick=()=>window.location.href='/catalog';
+        updateCartCount(); renderCart();
+
+        // Плавающие кнопки
+        const cartFloatBtn = document.getElementById('cartFloatBtn'), assistantFloatBtn = document.getElementById('assistantFloatBtn'), assistantModal = document.getElementById('assistantModal'), closeAssistant = document.getElementById('closeAssistant'), assistantInput = document.getElementById('assistantInput'), assistantSend = document.getElementById('assistantSend'), assistantMessages = document.getElementById('assistantMessages');
+        function initFloatingButtons() {
+            if (cartFloatBtn) { const goToCart = (e) => { e.preventDefault(); window.location.href = '/catalog/cart'; }; cartFloatBtn.addEventListener('click', goToCart); cartFloatBtn.addEventListener('touchstart', goToCart, { passive: false }); }
+            if (assistantFloatBtn) { const toggleAssistant = (e) => { e.preventDefault(); assistantModal.classList.toggle('show'); }; assistantFloatBtn.addEventListener('click', toggleAssistant); assistantFloatBtn.addEventListener('touchstart', toggleAssistant, { passive: false }); }
+            if (closeAssistant) { const close = (e) => { e.preventDefault(); assistantModal.classList.remove('show'); }; closeAssistant.addEventListener('click', close); closeAssistant.addEventListener('touchstart', close, { passive: false }); }
+        }
+        initFloatingButtons();
+        window.addEventListener('spd:language-changed', renderCart);
+        // Drag и AI как в других файлах
+    </script>
+</body>
+</html>

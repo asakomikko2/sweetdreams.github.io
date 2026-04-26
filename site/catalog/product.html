@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sweet Pillow Dreams — Товар</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/catalog/style.css">
+    <script src="/catalog/i18n.js"></script>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('spd-theme') || localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const mode = savedTheme || (prefersDark ? 'dark' : 'light');
+            document.documentElement.dataset.theme = mode;
+            if (mode === 'dark') document.documentElement.classList.add('preload-dark');
+        })();
+    </script>
+    <style>
+        /* Основной контейнер страницы товара */
+        .product-page {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            background: var(--bg-white);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            animation: fadeInUp 0.4s ease;
+        }
+        .product-gallery {
+            flex: 1;
+            min-width: 300px;
+        }
+        .main-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: contain;
+            background: var(--bg-light);
+            border-radius: 16px;
+            cursor: zoom-in;
+            transition: transform 0.2s;
+        }
+        .main-image:hover { transform: scale(1.02); }
+        .thumbnail-list {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+        .thumbnail {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        .thumbnail.active,
+        .thumbnail:hover {
+            opacity: 1;
+            border-color: var(--primary);
+        }
+        .product-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        /* Название товара – полностью, без обрезки */
+        .product-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            display: block !important;
+            -webkit-line-clamp: unset !important;
+            overflow: visible !important;
+        }
+        .product-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        .product-meta {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .product-description { margin-top: 20px; }
+        .desc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 12px 0;
+            font-weight: 600;
+            border-top: 1px solid var(--border);
+            user-select: none;
+        }
+        .desc-header i { transition: transform 0.3s; }
+        .desc-header.open i { transform: rotate(180deg); }
+        .desc-preview {
+            color: var(--text-gray);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+        .desc-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            color: var(--text-gray);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        .desc-content.open { max-height: 2000px; padding-bottom: 16px; }
+        .product-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        .btn-primary,
+        .btn-secondary {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+            border: none;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: scale(0.98); }
+        .btn-secondary {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            color: var(--text-dark);
+        }
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            color: var(--primary);
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+        .back-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        @media (max-width: 768px) {
+            .product-container { padding: 20px; }
+            .product-title { font-size: 1.3rem; }
+            .product-price { font-size: 1.5rem; }
+            .product-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body class="pre-theme">
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" id="logo">
+                    <i class="fas fa-moon"></i>
+                    <span>Sweet<span>Pillow</span><span>Dreams</span></span>
+                </div>
+                <div class="search-wrapper">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Поиск...">
+                        <button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div id="searchDropdown" class="search-dropdown"></div>
+                </div>
+                <div class="header-spacer"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ВАЖНО: контейнер с классом product-page -->
+    <div class="product-page">
+        <button class="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+        <div id="productContainer" class="product-container">
+            <div style="text-align:center;width:100%;padding:50px">Загрузка...</div>
+        </div>
+    </div>
+
+    <button id="cartFloatBtn" class="cart-floating">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cartFloatCount" class="cart-floating-count">0</span>
+    </button>
+    <button id="assistantFloatBtn" class="assistant-floating"><i class="fas fa-robot"></i></button>
+    <div id="assistantModal" class="assistant-modal">
+        <div class="assistant-header">
+            <span><i class="fas fa-robot"></i> Sweet Pillow AI</span>
+            <button id="closeAssistant"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="assistant-warning"><i class="fas fa-info-circle"></i> Ответы опираются на данные каталога Sweet Pillow Dreams и могут требовать уточнения.</div>
+        <div class="assistant-messages" id="assistantMessages">
+            <div class="assistant-message bot">Привет! Я AI-консультант Sweet Pillow Dreams. Спрашивайте о подушках, выборе размера, материалах — помогу!</div>
+        </div>
+        <div class="assistant-input">
+            <input type="text" id="assistantInput" placeholder="Напишите вопрос...">
+            <button id="assistantSend"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col"><div class="footer-logo"><i class="fas fa-moon"></i> Sweet Pillow Dreams</div><p>Комфорт для вашего сна с 2008 года</p></div>
+                <div class="footer-col"><h4>Контакты</h4><p><i class="fab fa-telegram"></i> @pillows_uz</p><p><i class="fab fa-instagram"></i> sweetpillowdreams_uz</p><p><i class="fas fa-map-marker-alt"></i> г. Ташкент, Яшнобадский р-н, ул. Авиасозлар-1, дом 19</p></div>
+                <div class="footer-col"><h4>Мы в соцсетях</h4><div class="social-links"><a href="https://t.me/pillows_uz" target="_blank"><i class="fab fa-telegram"></i></a><a href="https://www.instagram.com/sweetpillowdreams_uz" target="_blank"><i class="fab fa-instagram"></i></a></div></div>
+                <div class="footer-col"><h4>Режим работы</h4><p>ПН-СБ: 10:00–16:00</p><p>ВС: выходной</p></div>
+            </div>
+            <div class="footer-bottom">© 2008-2026 Sweet Pillow Dreams — Все права защищены</div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const PLACEHOLDER = '/images/placeholder.png';
+        function cleanProductName(name) {
+            if (!name) return '';
+            let cleaned = name.replace(/\s*[-–—]\s*комфортный сон/gi, '');
+            cleaned = cleaned.replace(/\s+1\s*шт\.?/gi, '');
+            cleaned = cleaned.replace(/,?\s*1\s*шт\.?/gi, '');
+            cleaned = cleaned.replace(/\s+комфортный сон/gi, '');
+            return cleaned.trim();
+        }
+        function showToast(m) { const t = document.getElementById('toast'); if (t) { t.textContent = m; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2000); } }
+        function formatPrice(p) { return p ? Number(p).toLocaleString() + ' сум' : 'Цена не указана'; }
+        function escapeHtml(t) { if (!t) return ''; return t.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
+        function tr(text) { return window.SPD_I18N ? window.SPD_I18N.t(text) : text; }
+        function getProductDescription(product) { return window.SPD_I18N ? window.SPD_I18N.productDescription(product) : (product?.description || ''); }
+        function sendToTelegram(text) { window.open(`https://t.me/pillows_uz?text=${encodeURIComponent(text)}`, '_blank'); }
+        (function applyStoredTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const mode = localStorage.getItem('spd-theme') || localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+            document.documentElement.dataset.theme = mode;
+            if (mode === 'dark') document.body.classList.add('dark');
+            else document.body.classList.remove('dark');
+        })();
+        function buildProductUrl(product) {
+            const identifier = product?.public_id || product?.sku || product?.slug || '';
+            return `/catalog/${encodeURIComponent(identifier)}`;
+        }
+
+        function declineProduct(name, qty) {
+            if (qty === 1) return name;
+            if (name.endsWith('а')) return name.slice(0, -1) + 'ы';
+            return name + 'ы';
+        }
+
+        function buyNow(product, quantity = 1) {
+            const total = (product.price || 0) * quantity;
+            let text = `Здравствуйте! Хочу заказать ${quantity > 1 ? quantity + ' ' : ''}${declineProduct(cleanProductName(product.name), quantity)}`;
+            if (product.size) text += `, ${product.size}`;
+            text += ` (${formatPrice(total)})`;
+            sendToTelegram(text);
+            showToast('✅ Переход в Telegram');
+        }
+
+        function buyWithQuantity(p) {
+            let qty = prompt('Введите количество:', '1');
+            if (qty === null) return;
+            qty = parseInt(qty);
+            if (isNaN(qty) || qty < 1) { showToast('❌ Введите число больше 0'); return; }
+            buyNow(p, qty);
+        }
+
+        function getCart() { return JSON.parse(localStorage.getItem('cart') || '[]'); }
+        function saveCart(c) { localStorage.setItem('cart', JSON.stringify(c)); updateCartCount(); }
+        function updateCartCount() { const cart = getCart(); const total = cart.reduce((s, i) => s + i.quantity, 0); const countEl = document.getElementById('cartFloatCount'); if (countEl) countEl.textContent = total; }
+
+        function addToCart(p, quantity = 1) {
+            let c = getCart(); const ex = c.find(i => i.sku === p.sku);
+            if (ex) ex.quantity += quantity;
+            else c.push({ sku: p.sku, name: cleanProductName(p.name), price: p.price, size: p.size, image: p.images?.[0] || PLACEHOLDER, quantity });
+            c.sort((a, b) => (a.sku === p.sku ? -1 : 1));
+            saveCart(c); showToast(`✅ Добавлено в корзину (${quantity} шт.)`);
+        }
+
+        function addToCartWithQuantity(p) {
+            let qty = prompt('Введите количество:', '1');
+            if (qty === null) return;
+            qty = parseInt(qty);
+            if (isNaN(qty) || qty < 1) { showToast('❌ Введите число больше 0'); return; }
+            addToCart(p, qty);
+        }
+
+        function getPreviewDescription(fullDesc) {
+            if (!fullDesc) return '';
+            const lines = fullDesc.split(/\n+/); let preview = lines[0].trim();
+            if (preview.length < 30 && lines.length > 1) preview = lines.slice(0, 2).join(' ').trim();
+            if (preview.length > 150) preview = preview.substring(0, 150) + '...';
+            return preview;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const pathname = decodeURIComponent(window.location.pathname);
+        const numericPathMatch = pathname.match(/^\/catalog\/(\d+)\/?$/);
+        const legacyPathMatch = pathname.match(/\/catalog\/product\/(.+)$/);
+        const routeIdentifier = numericPathMatch ? numericPathMatch[1] : legacyPathMatch ? legacyPathMatch[1] : '';
+        const slug = routeIdentifier || urlParams.get('item');
+        const sku = urlParams.get('sku');
+        function renderProductNotFound(title = 'Товар не найден', message = 'Мы не нашли этот товар. Возможно, ссылка устарела или товар уже убран из каталога.') {
+            document.getElementById('productContainer').innerHTML = `
+                <div class="not-found-card">
+                    <span class="not-found-code">404</span>
+                    <h1>${tr(title)}</h1>
+                    <p>${tr(message)}</p>
+                    <a href="/catalog">${tr('Вернуться в каталог')}</a>
+                </div>
+            `;
+        }
+        if (!slug && !sku) renderProductNotFound('Товар не указан', 'Откройте товар из каталога или воспользуйтесь поиском.');
+        else fetch('/api/products').then(r => r.json()).then(products => {
+            const p = products.find(p => slug ? (String(p.public_id) === slug || p.slug === slug || String(p.sku) === slug) : p.sku == sku);
+            if (!p) { renderProductNotFound(); return; }
+            const images = p.images && p.images.length ? p.images : [PLACEHOLDER];
+            const fullDesc = (getProductDescription(p) || 'Описание отсутствует').replace(/[\*\#\"\']/g, '');
+            const previewDesc = getPreviewDescription(fullDesc);
+            let html = `
+                <div class="product-gallery">
+                    <img class="main-image" id="mainImage" src="${images[0]}" onerror="this.src='${PLACEHOLDER}'">
+                    ${images.length > 1 ? `<div class="thumbnail-list">` + images.map((img, i) => `<img class="thumbnail ${i === 0 ? 'active' : ''}" src="${img}" data-index="${i}" onerror="this.src='${PLACEHOLDER}'">`).join('') + `</div>` : ''}
+                </div>
+                <div class="product-info">
+                    <h1 class="product-title">${escapeHtml(cleanProductName(p.name))}</h1>
+                    <div class="product-price">${formatPrice(p.price)}</div>
+                    <div class="product-meta">
+                        ${p.size ? `<p><strong>${tr('Размер')}:</strong> ${p.size}</p>` : ''}
+                        ${p.category ? `<p><strong>${tr('Категория')}:</strong> ${p.category}</p>` : ''}
+                    </div>
+                    <div class="product-description">
+                        <div class="desc-header" id="descHeader"><span>📖 ${tr('Описание')}</span><i class="fas fa-chevron-down"></i></div>
+                        <div class="desc-preview">${escapeHtml(previewDesc)}</div>
+                        <div class="desc-content" id="descContent"><p>${escapeHtml(fullDesc).replace(/\n/g, '<br>')}</p></div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-primary" id="buyNowBtn">${tr('Купить')}</button>
+                        <button class="btn-secondary" id="addToCartBtn">${tr('В корзину')}</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('productContainer').innerHTML = html;
+            if (images.length > 1) {
+                const main = document.getElementById('mainImage'), thumbs = document.querySelectorAll('.thumbnail');
+                thumbs.forEach(t => { t.onclick = () => { thumbs.forEach(t => t.classList.remove('active')); t.classList.add('active'); main.src = t.src; }; });
+            }
+            const dh = document.getElementById('descHeader'), dc = document.getElementById('descContent'); let isOpen = false;
+            dh.onclick = () => { isOpen = !isOpen; dc.classList.toggle('open', isOpen); dh.classList.toggle('open', isOpen); };
+            document.getElementById('buyNowBtn').onclick = () => buyWithQuantity(p);
+            document.getElementById('addToCartBtn').onclick = () => addToCartWithQuantity(p);
+        }).catch(e => { renderProductNotFound('Ошибка загрузки', 'Не получилось загрузить данные товара. Попробуйте обновить страницу.'); });
+
+        // Поиск
+        const searchInput = document.getElementById('searchInput'), clearSearch = document.getElementById('clearSearch'), searchDropdown = document.getElementById('searchDropdown');
+        if (searchInput) {
+            searchInput.oninput = () => {
+                const q = searchInput.value.toLowerCase(); clearSearch.classList.toggle('visible', q.length > 0);
+                if (q.length < 2) { searchDropdown.classList.remove('show'); return; }
+                fetch('/api/products').then(r => r.json()).then(products => {
+                    const res = products.filter(p => (cleanProductName(p.name)||'').toLowerCase().includes(q)).slice(0, 10);
+                    searchDropdown.innerHTML = res.map(p => `<div class="search-item" data-sku="${p.sku}"><span>${escapeHtml(cleanProductName(p.name))}</span><span>${formatPrice(p.price)}</span></div>`).join('');
+                    searchDropdown.classList.add('show');
+                    document.querySelectorAll('.search-item').forEach(el => el.onclick = () => {
+                        const product = res.find(item => item.sku === el.dataset.sku);
+                        window.location.href = buildProductUrl(product || { sku: el.dataset.sku });
+                        searchDropdown.classList.remove('show');
+                        searchInput.value = '';
+                        clearSearch.classList.remove('visible');
+                    });
+                });
+            };
+            clearSearch.onclick = () => { searchInput.value = ''; clearSearch.classList.remove('visible'); searchDropdown.classList.remove('show'); };
+        }
+        document.addEventListener('click', (e) => { if (searchInput && !searchInput.contains(e.target) && !searchDropdown.contains(e.target)) searchDropdown.classList.remove('show'); });
+        document.getElementById('logo').onclick = () => window.location.href = '/catalog';
+        updateCartCount();
+
+        // Плавающие кнопки
+        const cartFloatBtn = document.getElementById('cartFloatBtn'), assistantFloatBtn = document.getElementById('assistantFloatBtn'), assistantModal = document.getElementById('assistantModal'), closeAssistant = document.getElementById('closeAssistant'), assistantInput = document.getElementById('assistantInput'), assistantSend = document.getElementById('assistantSend'), assistantMessages = document.getElementById('assistantMessages');
+        function initFloatingButtons() {
+            if (cartFloatBtn) { const goToCart = (e) => { e.preventDefault(); window.location.href = '/catalog/cart'; }; cartFloatBtn.addEventListener('click', goToCart); cartFloatBtn.addEventListener('touchstart', goToCart, { passive: false }); }
+            if (assistantFloatBtn) { const toggleAssistant = (e) => { e.preventDefault(); assistantModal.classList.toggle('show'); }; assistantFloatBtn.addEventListener('click', toggleAssistant); assistantFloatBtn.addEventListener('touchstart', toggleAssistant, { passive: false }); }
+            if (closeAssistant) { const close = (e) => { e.preventDefault(); assistantModal.classList.remove('show'); }; closeAssistant.addEventListener('click', close); closeAssistant.addEventListener('touchstart', close, { passive: false }); }
+        }
+        initFloatingButtons();
+
+        // Drag
+        let isDragging = false, startX, startY, initialLeft, initialTop; const assistantHeader = document.querySelector('.assistant-header');
+        function onDragStart(e) { e.preventDefault(); isDragging = true; const rect = assistantModal.getBoundingClientRect(); const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0); const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0); startX = clientX; startY = clientY; initialLeft = rect.left; initialTop = rect.top; assistantModal.style.transition = 'none'; }
+        function onDragMove(e) { if (!isDragging) return; e.preventDefault(); const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0); const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0); const dx = clientX - startX, dy = clientY - startY; let newLeft = initialLeft + dx, newTop = initialTop + dy; const maxX = window.innerWidth - assistantModal.offsetWidth; const maxY = window.innerHeight - assistantModal.offsetHeight; newLeft = Math.min(Math.max(newLeft, 0), maxX); newTop = Math.min(Math.max(newTop, 0), maxY); assistantModal.style.left = newLeft + 'px'; assistantModal.style.top = newTop + 'px'; assistantModal.style.right = 'auto'; assistantModal.style.bottom = 'auto'; }
+        function onDragEnd() { isDragging = false; assistantModal.style.transition = ''; }
+        if (assistantHeader) { assistantHeader.addEventListener('mousedown', onDragStart); assistantHeader.addEventListener('touchstart', onDragStart, {passive: false}); window.addEventListener('mousemove', onDragMove); window.addEventListener('touchmove', onDragMove, {passive: false}); window.addEventListener('mouseup', onDragEnd); window.addEventListener('touchend', onDragEnd); }
+
+        async function sendAssistantMessage() {
+            const msg = assistantInput.value.trim(); if (!msg) return;
+            assistantMessages.innerHTML += `<div class="assistant-message user">${escapeHtml(msg)}</div>`; assistantInput.value = '';
+            const loading = document.createElement('div'); loading.className = 'assistant-message bot'; loading.textContent = '...'; assistantMessages.appendChild(loading); assistantMessages.scrollTop = assistantMessages.scrollHeight;
+            try {
+                const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg }) }); const data = await res.json(); loading.remove();
+                assistantMessages.innerHTML += `<div class="assistant-message bot">${escapeHtml(data.reply || 'Ошибка')}</div>`; assistantMessages.scrollTop = assistantMessages.scrollHeight;
+            } catch { loading.remove(); assistantMessages.innerHTML += `<div class="assistant-message bot">Ошибка соединения</div>`; }
+        }
+        if(assistantSend) assistantSend.onclick = sendAssistantMessage;
+        if(assistantInput) assistantInput.addEventListener('keypress', e => { if(e.key==='Enter') sendAssistantMessage(); });
+        window.addEventListener('spd:language-changed', () => window.location.reload());
+    </script>
+</body>
+</html>

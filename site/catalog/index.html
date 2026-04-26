@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Каталог — Sweet Pillow Dreams</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/catalog/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" id="logo">
+                    <i class="fas fa-moon"></i>
+                    <div class="logo-text">
+                        <span class="logo-brand">Sweet</span>
+                        <span class="logo-accent">Pillow</span>
+                        <span class="logo-brand">Dreams</span>
+                    </div>
+                </div>
+                <div class="search-wrapper">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Поиск по названию, описанию, размеру...">
+                        <button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div id="searchDropdown" class="search-dropdown"></div>
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="Переключить тему">
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="hero-catalog">
+                <div class="hero-copy">
+                    <div class="hero-badge"><i class="fas fa-feather-alt"></i> Коллекция для спокойного и здорового сна</div>
+                    <h1>Каталог подушек и текстиля, который ощущается как отдых</h1>
+                    <p>Подберите размер, наполнитель и формат без лишнего шума. Мы собрали всё в одном аккуратном каталоге: от классических подушек до моделей для детей и будущих мам.</p>
+                    <p class="hero-note">Если вы пока не знаете, что выбрать, можно начать с размера, наполнителя и привычной позы сна. А консультант Sweet Pillow Dreams подскажет направление без лишней технической путаницы.</p>
+                </div>
+                <div class="hero-illustration" aria-hidden="true">
+                    <div class="hero-moon"></div>
+                    <div class="hero-cloud hero-cloud-one"></div>
+                    <div class="hero-cloud hero-cloud-two"></div>
+                    <div class="hero-stars">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="heroProductsCount">0</span>
+                        <span class="hero-stat-label">товаров в каталоге</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="heroSizesCount">0</span>
+                        <span class="hero-stat-label">популярных размеров</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value">с 2008</span>
+                        <span class="hero-stat-label">офлайн-магазин и мастерская</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section" id="filterSection">
+                <div class="filter-header" id="filterHeader">
+                    <div class="filter-title">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Фильтры</span>
+                        <span class="filter-count" id="filterCount">0</span>
+                    </div>
+                    <div class="filter-header-meta">
+                        <button class="reset-filters" id="resetFilters">Сбросить</button>
+                        <button class="filter-toggle-btn" id="filterToggleBtn" aria-label="Свернуть фильтры">
+                            <i class="fas fa-chevron-up"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="filter-body" id="filterBody">
+                    <div class="filter-group filter-sort">
+                        <div class="filter-label">Сортировка</div>
+                        <div class="sort-select">
+                            <select id="sortSelect">
+                                <option value="default">По умолчанию</option>
+                                <option value="price-asc">Цена: по возрастанию</option>
+                                <option value="price-desc">Цена: по убыванию</option>
+                                <option value="name-asc">Название: А-Я</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <div class="filter-label">Тип товара</div>
+                        <div class="filter-options" id="typeOptions"></div>
+                    </div>
+                    <div class="filter-group filter-group-size">
+                        <div class="filter-label">Размер</div>
+                        <div class="filter-options filter-options--size" id="sizeOptions"></div>
+                    </div>
+                    <div class="filter-group">
+                        <div class="filter-label">Цвет</div>
+                        <div class="filter-options" id="colorOptions"></div>
+                    </div>
+                </div>
+                <div class="active-filters" id="activeFilters"></div>
+            </div>
+
+            <div class="skeleton-grid" id="skeletonGrid">
+                <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
+                <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
+            </div>
+
+            <div id="productsGrid" class="products-grid"></div>
+
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </main>
+
+    <button id="cartFloatBtn" class="cart-floating">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cartFloatCount" class="cart-floating-count">0</span>
+    </button>
+
+    <button id="assistantFloatBtn" class="assistant-floating">
+        <i class="fas fa-robot"></i>
+    </button>
+
+        <div id="assistantModal" class="assistant-modal">
+        <div class="assistant-header">
+            <span><i class="fas fa-comment-dots"></i> Консультант Sweet Pillow Dreams</span>
+            <button id="closeAssistant"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="assistant-warning">
+            <i class="fas fa-info-circle"></i> Ответы опираются на данные каталога и могут требовать уточнения по размеру или наполнителю.
+        </div>
+        <div class="assistant-messages" id="assistantMessages">
+            <div class="assistant-message bot">Здравствуйте! Я консультант Sweet Pillow Dreams. Подскажу по размерам, наполнителям, уходу и тому, что лучше выбрать для вашего сна.</div>
+        </div>
+        <div class="assistant-input">
+            <input type="text" id="assistantInput" placeholder="Напишите вопрос...">
+            <button id="assistantSend"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col"><div class="footer-logo"><i class="fas fa-moon"></i> Sweet Pillow Dreams</div><p>Комфорт для вашего сна с 2008 года</p></div>
+                <div class="footer-col"><h4>Контакты</h4><p><i class="fab fa-telegram"></i> @pillows_uz</p><p><i class="fab fa-instagram"></i> sweetpillowdreams_uz</p><p><i class="fas fa-map-marker-alt"></i> г. Ташкент, Яшнобадский р-н, ул. Авиасозлар-1, дом 19</p></div>
+                <div class="footer-col"><h4>Мы в соцсетях</h4><div class="social-links"><a href="https://t.me/pillows_uz" target="_blank"><i class="fab fa-telegram"></i></a><a href="https://www.instagram.com/sweetpillowdreams_uz" target="_blank"><i class="fab fa-instagram"></i></a></div></div>
+                <div class="footer-col"><h4>Режим работы</h4><p>ПН-СБ: 10:00–16:00</p><p>ВС: выходной</p></div>
+            </div>
+            <div class="footer-bottom">© 2008-2026 Sweet Pillow Dreams — Все права защищены</div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="/catalog/i18n.js"></script>
+    <script src="/catalog/ai.js"></script>
+    <script src="/catalog/script.js"></script>
+</body>
+</html>
