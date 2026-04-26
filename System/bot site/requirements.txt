@@ -1,5 +1,0 @@
-# SYSTEM/bot site/requirements.txt
-python-telegram-bot==20.7
-requests
-Pillow
-python-dotenv
