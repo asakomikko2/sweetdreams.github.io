@@ -1,0 +1,24 @@
+services:
+  site:
+    build:
+      context: ./site
+    image: sweet-pillow-site:1.0
+    container_name: sweet-pillow-site
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./site:/app/site
+      - ./images:/app/images
+
+  bot:
+    build:
+      context: "./bot site"
+    image: sweet-pillow-bot:1.0
+    container_name: sweet-pillow-bot
+    restart: unless-stopped
+    volumes:
+      - ./site:/app/site
+      - ./images:/app/images
+    depends_on:
+      - site
